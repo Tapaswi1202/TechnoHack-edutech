@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Countdown Timer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-image: url('https://img.freepik.com/free-vector/dramatic-fire-flame-border-frame_53876-100448.jpg?w=1380&t=st=1697423130~exp=1697423730~hmac=6b04215faa8282507de2ac7040d296d3fdbcd3dcc219e574bd0ddfb944cb9588');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: white;
+        }
+
+        .timer-box {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            display: inline-block;
+        }
+
+        #timer {
+            font-size: 36px;
+            color: yellow;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+        }
+
+        #start {
+            background-color: green;
+            color: white;
+        }
+
+        #stop {
+            background-color: red;
+            color: white;
+        }
+
+        #reset {
+            background-color: yellow;
+            color: black;
+        }
+
+        #stopTime {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-box">
+        <h1 style="color: cyan;">Countdown Timer</h1>
+        <div id="timer">00:00:00</div>
+        <button id="start">Start</button>
+        <button id="stop" disabled>Stop</button>
+        <button id="reset" disabled>Reset</button>
+        <div id="stopTime"></div>
+    </div>
+
+    <script>
+        let interval;
+        let timeInSeconds = 300;
+        let timerRunning = false;
+        let stopTime = 0;
+
+        const timerDisplay = document.getElementById('timer');
+        const stopTimeDisplay = document.getElementById('stopTime');
+        const startButton = document.getElementById('start');
+        const stopButton = document.getElementById('stop');
+        const resetButton = document.getElementById('reset');
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeInSeconds / 3600);
+            const minutes = Math.floor((timeInSeconds % 3600) / 60);
+            const seconds = timeInSeconds % 60;
+
+            timerDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (!timerRunning) {
+                interval = setInterval(() => {
+                    if (timeInSeconds > 0) {
+                        timeInSeconds--;
+                        updateTimerDisplay();
+                    } else {
+                        stopTimer();
+                    }
+                }, 1000);
+
+                timerRunning = true;
+                startButton.disabled = true;
+                stopButton.disabled = false;
+                resetButton.disabled = false;
+            }
+        }
+
+        function stopTimer() {
+            clearInterval(interval);
+            timerRunning = false;
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            stopTime = timeInSeconds;
+            stopTimeDisplay.textContent = `Stop Time: ${timerDisplay.textContent}`;
+        }
+
+        function resetTimer() {
+            if (confirm("Are you sure you want to reset the timer?")) {
+                stopTimer();
+                timeInSeconds = 300;
+                updateTimerDisplay();
+                resetButton.disabled = true;
+                stopTimeDisplay.textContent = '';
+            }
+        }
+
+        startButton.addEventListener('click', startTimer);
+        stopButton.addEventListener('click', stopTimer);
+        resetButton.addEventListener('click', resetTimer);
+
+        updateTimerDisplay();
+    </script>
+</body>
+</html>
